@@ -181,6 +181,32 @@
 .score-bad { color: #dc2626; }
 .score-tot { color: #6b7280; }
 
+/* Quiet audio control (bottom-left) */
+.volume-control {
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 11px;
+  color: #4b5563;
+  background: rgba(255, 255, 255, 0.94);
+  border: 3px solid #ece9e0;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.volume-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+.volume-slider {
+  width: clamp(76px, 18vw, 120px);
+  accent-color: #6b7280;
+  cursor: pointer;
+}
+
 /* Colour card */
 .stage {
   display: flex;
