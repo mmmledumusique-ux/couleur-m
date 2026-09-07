@@ -18,6 +18,15 @@ const COLOURS: Record<ColourKey, string> = {
 };
 
 const KEYS = Object.keys(COLOURS) as ColourKey[];
+const AUDIO_PATHS: Record<ColourKey, string> = {
+  bleu: "/audio/bleu.m4a",
+  vert: "/audio/vert.mp3",
+  rouge: "/audio/rouge.m4a",
+  orange: "/audio/orange.mp3",
+  jaune: "/audio/jaune.mp3",
+  noir: "/audio/noir.mp3",
+};
+
 const CARD_ANIMATIONS = [
   "card-rise",
   "card-twirl",
@@ -90,7 +99,9 @@ function ColourGame() {
   const [celebrate, setCelebrate] = useState(false);
   const [pieces, setPieces] = useState<Piece[]>([]);
   const [score, setScore] = useState({ correct: 0, incorrect: 0 });
+  const [volume, setVolume] = useState(0.35);
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const next = useCallback(() => {
@@ -117,13 +128,25 @@ function ColourGame() {
     next();
     return () => {
       timers.current.forEach(clearTimeout);
+      audioRef.current?.pause();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const playWord = (word: ColourKey) => {
+    audioRef.current?.pause();
+    const audio = new Audio(AUDIO_PATHS[word]);
+    audio.volume = volume;
+    audioRef.current = audio;
+    void audio.play().catch(() => {
+      // A failed recording should never interrupt the game.
+    });
+  };
+
   const handleAnswer = (idx: number) => {
     if (locked || correctIdx !== null) return;
     const chosen = choices[idx];
+    playWord(chosen);
 
     if (chosen === colour) {
       setLocked(true);
@@ -151,6 +174,26 @@ function ColourGame() {
         <span className="score-bad">✗ {score.incorrect}</span>
         <span className="score-tot">= {total}</span>
       </div>
+
+      <label className="volume-control">
+        <span className="volume-icon" aria-hidden="true">
+          {volume === 0 ? "🔇" : "🔉"}
+        </span>
+        <input
+          className="volume-slider"
+          type="range"
+          min="0"
+          max="0.65"
+          step="0.05"
+          value={volume}
+          aria-label="Volume"
+          onChange={(event) => {
+            const nextVolume = Number(event.target.value);
+            setVolume(nextVolume);
+            if (audioRef.current) audioRef.current.volume = nextVolume;
+          }}
+        />
+      </label>
 
       {/* Celebration layer */}
       {celebrate && (
