@@ -152,11 +152,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
-  padding: 24px 16px 40px;
+  min-height: 100dvh;
+  padding: clamp(76px, 12vh, 104px) 16px 40px;
   background: #fcfbf8;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Score counter (top-right) */
@@ -182,28 +184,65 @@
 /* Colour card */
 .stage {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  height: 38vh;
-  min-height: 210px;
-  max-height: 360px;
+  width: 100%;
 }
 .colour-card {
-  width: clamp(200px, 46vw, 320px);
-  height: clamp(200px, 46vw, 320px);
-  border-radius: 36px;
+  width: min(70vw, 38vh, 320px);
+  min-width: 120px;
+  aspect-ratio: 1;
+  border-radius: clamp(22px, 7vw, 36px);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14);
-  animation: card-rise 0.7s cubic-bezier(0.22, 1.4, 0.36, 1) both;
+  animation-duration: 0.78s;
+  animation-timing-function: cubic-bezier(0.22, 1.25, 0.36, 1);
+  animation-fill-mode: both;
+  will-change: transform, opacity;
 }
+.card-rise { animation-name: card-rise; }
+.card-twirl { animation-name: card-twirl; }
+.card-spin { animation-name: card-spin; }
+.card-pop { animation-name: card-pop; }
+.card-left { animation-name: card-left; }
+.card-right { animation-name: card-right; }
+.card-bounce { animation-name: card-bounce; }
+.card-flip { animation-name: card-flip; }
+
 @keyframes card-rise {
-  0% {
-    opacity: 0;
-    transform: translateY(70px) scale(0.82);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(70px) scale(0.82); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes card-twirl {
+  from { opacity: 0; transform: scale(0.25) rotate(-540deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes card-spin {
+  from { opacity: 0; transform: rotate(180deg) scale(0.7); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+@keyframes card-pop {
+  0% { opacity: 0; transform: scale(0.2); }
+  70% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes card-left {
+  from { opacity: 0; transform: translateX(-90vw) rotate(-12deg); }
+  to { opacity: 1; transform: translateX(0) rotate(0); }
+}
+@keyframes card-right {
+  from { opacity: 0; transform: translateX(90vw) rotate(12deg); }
+  to { opacity: 1; transform: translateX(0) rotate(0); }
+}
+@keyframes card-bounce {
+  0% { opacity: 0; transform: translateY(-80px) scale(0.75); }
+  60% { opacity: 1; transform: translateY(14px) scale(1.04); }
+  80% { transform: translateY(-7px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes card-flip {
+  from { opacity: 0; transform: perspective(700px) rotateY(-90deg) scale(0.8); }
+  to { opacity: 1; transform: perspective(700px) rotateY(0) scale(1); }
 }
 
 /* Answer buttons */
@@ -212,7 +251,8 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: clamp(12px, 3vw, 24px);
-  margin-top: clamp(28px, 5vh, 48px);
+  width: 100%;
+  margin-top: clamp(22px, 4vh, 38px);
   max-width: 720px;
   opacity: 0;
   transform: translateY(16px);
@@ -323,8 +363,37 @@
 }
 
 @media (max-width: 480px) {
+  .answers {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 300px;
+  }
   .answer-btn {
-    min-width: 42%;
-    flex: 1 1 42%;
+    width: 100%;
+    min-width: 0;
+    padding: 14px 24px;
+  }
+}
+
+@media (max-height: 520px) {
+  .game-root {
+    padding-top: 70px;
+  }
+  .colour-card {
+    width: min(58vw, 34vh, 210px);
+  }
+  .answers {
+    margin-top: 18px;
+  }
+  .answer-btn {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colour-card {
+    animation-name: card-pop;
+    animation-duration: 0.2s;
   }
 }
