@@ -140,5 +140,191 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: Helvetica, Arial, sans-serif;
+  }
+}
+
+/* =========================================================
+   French colour-matching game
+   ========================================================= */
+.game-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px 16px 40px;
+  background: #fcfbf8;
+  overflow: hidden;
+}
+
+/* Score counter (top-right) */
+.score {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  display: flex;
+  gap: 12px;
+  font-size: clamp(14px, 2.4vw, 18px);
+  font-weight: 700;
+  background: #fff;
+  border: 3px solid #ece9e0;
+  border-radius: 999px;
+  padding: 8px 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  z-index: 20;
+}
+.score-ok { color: #16a34a; }
+.score-bad { color: #dc2626; }
+.score-tot { color: #6b7280; }
+
+/* Colour card */
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38vh;
+  min-height: 210px;
+  max-height: 360px;
+}
+.colour-card {
+  width: clamp(200px, 46vw, 320px);
+  height: clamp(200px, 46vw, 320px);
+  border-radius: 36px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14);
+  animation: card-rise 0.7s cubic-bezier(0.22, 1.4, 0.36, 1) both;
+}
+@keyframes card-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(70px) scale(0.82);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Answer buttons */
+.answers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(12px, 3vw, 24px);
+  margin-top: clamp(28px, 5vh, 48px);
+  max-width: 720px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+}
+.answers.answers-in {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.answer-btn {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: clamp(22px, 4.6vw, 34px);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 18px 34px;
+  min-width: 150px;
+  background: #ffffff;
+  border: 4px solid #ece9e0;
+  border-radius: 28px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  /* keep coloured text legible on white, esp. yellow */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  user-select: none;
+}
+.answer-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
+  border-color: #d8d3c4;
+}
+.answer-btn:active {
+  transform: translateY(-1px);
+}
+.answer-btn:disabled {
+  cursor: default;
+}
+
+/* Wrong answer feedback */
+.answer-btn.shake {
+  animation: shake 0.45s ease;
+  border-color: #dc2626;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-9px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(4px); }
+}
+
+/* Correct answer feedback */
+.answer-btn.correct-flash {
+  animation: correct-pop 0.9s ease;
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+@keyframes correct-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.12); box-shadow: 0 0 0 8px rgba(22, 163, 74, 0.18); }
+  60% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+/* Confetti / sparkles celebration */
+.confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  overflow: hidden;
+}
+.confetti-bit,
+.sparkle {
+  position: absolute;
+  top: -40px;
+  animation-name: confetti-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+.confetti-bit {
+  border-radius: 3px;
+}
+.sparkle {
+  background: transparent;
+  display: inline-block;
+  font-size: inherit;
+}
+.sparkle::before {
+  content: "★";
+  display: block;
+  line-height: 1;
+  color: inherit;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+  transform: rotate(var(--rot));
+}
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-40px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotate(var(--rot));
+    opacity: 0.9;
+  }
+}
+
+@media (max-width: 480px) {
+  .answer-btn {
+    min-width: 42%;
+    flex: 1 1 42%;
   }
 }
