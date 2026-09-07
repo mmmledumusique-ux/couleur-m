@@ -18,6 +18,18 @@ const COLOURS: Record<ColourKey, string> = {
 };
 
 const KEYS = Object.keys(COLOURS) as ColourKey[];
+const CARD_ANIMATIONS = [
+  "card-rise",
+  "card-twirl",
+  "card-spin",
+  "card-pop",
+  "card-left",
+  "card-right",
+  "card-bounce",
+  "card-flip",
+] as const;
+type CardAnimation = (typeof CARD_ANIMATIONS)[number];
+
 const CONFETTI_PALETTE = [
   "#2563eb", "#16a34a", "#dc2626", "#ea580c", "#eab308", "#9333ea",
   "#0891b2", "#db2777", "#f59e0b",
@@ -70,6 +82,7 @@ function ColourGame() {
   const [colour, setColour] = useState<ColourKey>("bleu");
   const [choices, setChoices] = useState<ColourKey[]>(["bleu", "vert", "rouge"]);
   const [cardKey, setCardKey] = useState(0);
+  const [cardAnimation, setCardAnimation] = useState<CardAnimation>("card-rise");
   const [buttonsVisible, setButtonsVisible] = useState(false);
   const [locked, setLocked] = useState(false);
   const [wrongIdx, setWrongIdx] = useState<number | null>(null);
@@ -91,11 +104,12 @@ function ColourGame() {
     const wrongs = shuffle(KEYS.filter((k) => k !== c)).slice(0, 2);
     setColour(c);
     setChoices(shuffle([c, ...wrongs]));
+    setCardAnimation(pick(CARD_ANIMATIONS));
     setCardKey((k) => k + 1);
 
-    // Reveal answer buttons after the card finishes rising in.
+    // Reveal answer buttons only after the entrance animation finishes.
     timers.current.push(
-      setTimeout(() => setButtonsVisible(true), 720),
+      setTimeout(() => setButtonsVisible(true), 820),
     );
   }, []);
 
@@ -164,7 +178,7 @@ function ColourGame() {
       <div className="stage">
         <div
           key={cardKey}
-          className="colour-card"
+          className={`colour-card ${cardAnimation}`}
           style={{ backgroundColor: COLOURS[colour] }}
           aria-label="colour card"
         />
