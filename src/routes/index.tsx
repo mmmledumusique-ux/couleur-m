@@ -100,6 +100,7 @@ function ColourGame() {
   const [pieces, setPieces] = useState<Piece[]>([]);
   const [score, setScore] = useState({ correct: 0, incorrect: 0 });
   const [volume, setVolume] = useState(0.35);
+  const [colouredWords, setColouredWords] = useState(true);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -195,6 +196,27 @@ function ColourGame() {
         />
       </label>
 
+      <label className="word-colour-control">
+        <span
+          className="word-colour-icon"
+          aria-hidden="true"
+          style={{
+            color: colouredWords ? COLOURS.bleu : "#111827",
+          }}
+        >
+          Aa
+        </span>
+        <span className="word-colour-switch">
+          <input
+            type="checkbox"
+            checked={colouredWords}
+            aria-label="Write colour words in their matching colours"
+            onChange={(event) => setColouredWords(event.target.checked)}
+          />
+          <span className="word-colour-track" aria-hidden="true" />
+        </span>
+      </label>
+
       {/* Celebration layer */}
       {celebrate && (
         <div className="confetti" aria-hidden="true">
@@ -243,7 +265,7 @@ function ColourGame() {
               className={cls}
               onClick={() => handleAnswer(idx)}
               disabled={correctIdx !== null}
-              style={{ color: COLOURS[key] }}
+              style={{ color: colouredWords ? COLOURS[key] : "#111827" }}
             >
               {key}
             </button>
