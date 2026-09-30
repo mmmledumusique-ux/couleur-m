@@ -155,7 +155,7 @@
   justify-content: flex-start;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: clamp(76px, 12vh, 104px) 16px 40px;
+  padding: clamp(76px, 12vh, 104px) 16px 82px;
   background: #fcfbf8;
   overflow-x: hidden;
   overflow-y: auto;
@@ -205,6 +205,71 @@
   width: clamp(76px, 18vw, 120px);
   accent-color: #6b7280;
   cursor: pointer;
+}
+
+/* Coloured/black word toggle (bottom-right) */
+.word-colour-control {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 11px;
+  color: #111827;
+  background: rgba(255, 255, 255, 0.94);
+  border: 3px solid #ece9e0;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  user-select: none;
+}
+.word-colour-icon {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+.word-colour-switch {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+.word-colour-switch input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.word-colour-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #9ca3af;
+  transition: background 0.2s ease;
+}
+.word-colour-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+.word-colour-switch input:checked + .word-colour-track {
+  background: linear-gradient(90deg, #2563eb, #16a34a, #eab308, #dc2626);
+}
+.word-colour-switch input:checked + .word-colour-track::after {
+  transform: translateX(18px);
+}
+.word-colour-switch input:focus-visible + .word-colour-track {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
 }
 
 /* Colour card */
